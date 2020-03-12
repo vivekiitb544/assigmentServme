@@ -1,0 +1,275 @@
+1. Provide implementation for searchByName() methods
+
+// Setters, getters and constructors omitted for brevity
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Student {
+    private String name;
+    private String address;
+    private String school;
+    //class as a variable name can't be used in Java so changing it to class Name
+    private String className;
+    private double fee;
+}
+
+public class Staff {
+    private String name;
+    private String address;
+    private String school;
+    //class as a variable name can't be used in Java so changing it to class Name
+    private String className;
+    private double sallary;
+}
+
+public class StudentRepo {
+    private List<Student> students = new ArrayList<>();
+    private Map<String, Student> nameStudentObjMap = new HashMap<>();
+
+    public void addStudent(Student s) {
+        students.add(s);
+        String studentName = s.getName();
+        //Assuming that if name is empty then we are ignoring those instance but ideally name should not be empty.
+        if(studentName != null && studentName != ""){
+            //Storing key to map in a lowercase name so that we can unify the search string to get the results
+            nameStudentObjMap.put(studentName.toLowerCase(), s);
+        }
+    }
+
+    public Student searchByName(String name) {
+        if(name == null  || name == ""){
+            return null;
+        }
+       return this.nameStudentObjMap.get(name.toLowerCase());
+    }
+}
+
+public class StaffRepo {
+    private List<Staff> staffs = new ArrayList<>();
+    private Map<String, Staff> nameStaffObjMap = new HashMap<>();
+
+    public void addStaff(Staff s) {
+        staffs.add(s);
+        String staffName = s.getName();
+        if(staffName != null && staffName != ""){
+            //Storing key to map in a lowercase name so that we can unify the search string to get the results
+            nameStaffObjMap.put(staffName.toLowerCase(), s);
+        }
+    }
+
+    public Staff searchByName(String name) {
+        if(name == null  || name == ""){
+            return null;
+        }
+        return this.nameStaffObjMap.get(name.toLowerCase());
+    }
+}
+
+
+
+
+2. Looking at the above defined classes we can notice that there are a lot in common between them, is such a redundancy a bad or good
+   practice? why?
+Ans: Such redundancy is bad because
+    a. Such codes will difficult to manage
+    b. We won't be able to reuse the code so same thing will be written at multiple places and we might change things at one place
+     and forget at other places
+    c. We will miss on using OOPs
+
+
+
+
+3. Let us start by enhancing Student and Staff classes. They have common functionalities, we need to extract them to a separate Perso
+   n class. Provide an implementation of such a class performing needed changes to Student and Staff classes.
+
+    // Setters, getters and constructors omitted for brevity
+
+    import java.util.ArrayList;
+    import java.util.HashMap;
+    import java.util.List;
+    import java.util.Map;
+
+    public abstract class Person {
+        protected String name;
+        protected String address;
+        protected String school;
+        //class as a variable name can't be used in Java so changing it to className
+        protected String className;
+    }
+
+    public class Student extends Person{
+        private double fee;
+    }
+
+    public class Staff extends Person{
+        private double sallary;
+    }
+
+    public class StudentRepo {
+        private List<Student> students = new ArrayList<>();
+        private Map<String, Student> nameStudentObjMap = new HashMap<>();
+
+        public void addStudent(Student s) {
+            students.add(s);
+            String studentName = s.getName();
+            //Assuming that if name is empty then we are ignoring those instance but ideally name should not be empty.
+            if(studentName != null && studentName != "") {
+                //Storing key to map in a lowercase name so that we can unify the search string to get the results
+                nameStudentObjMap.put(studentName.toLowerCase(), s);
+            }
+        }
+
+        public Student searchByName(String name) {
+            if(name == null  || name == "") {
+                return null;
+            }
+           return this.nameStudentObjMap.get(name.toLowerCase());
+        }
+    }
+
+    public class StaffRepo {
+        private List<Staff> staffs = new ArrayList<>();
+        private Map<String, Staff> nameStaffObjMap = new HashMap<>();
+
+        public void addStaff(Staff s) {
+            staffs.add(s);
+            String staffName = s.getName();
+            if(staffName != null && staffName != "") {
+                //Storing key to map in a lowercase name so that we can unify the search string to get the results
+                nameStaffObjMap.put(staffName.toLowerCase(), s);
+            }
+        }
+
+        public Staff searchByName(String name) {
+            if(name == null  || name == ""){
+                return null;
+            }
+            return this.nameStaffObjMap.get(name.toLowerCase());
+        }
+    }
+
+
+
+4. Now let us move toStudentRepo and StaffRepo classes; they seem very similar, to remove this redundancy we want to replace them
+   with a single PersonRepo class that can hold Student or Staff items (i.e. an instance of PersonRepo can hold either Student or St
+   aff instances) in a type safe way. Provide an implementation for such a PersonRepoclass.
+
+    // Setters, getters and constructors omitted for brevity
+
+    import java.util.ArrayList;
+    import java.util.HashMap;
+    import java.util.List;
+    import java.util.Map;
+
+    public abstract class Person {
+        protected String name;
+        protected String address;
+        protected String school;
+        //class as a variable name can't be used in Java so changing it to className
+        protected String className;
+    }
+
+    public class Student extends Person {
+        private double fee;
+    }
+
+    public class Staff extends Person {
+        private double sallary;
+    }
+
+    public class PersonRepo<T extends Person> {
+        private List<T> persons = new ArrayList<>();
+        private Map<String, T> namePersonObjMap = new HashMap<>();
+
+        public void addPerson(T s) {
+            persons.add(s);
+            String personName = s.getName();
+            //Assuming that if name is empty then we are ignoring those instance but ideally name should not be empty.
+            if(personName != null && personName != "") {
+                //Storing key to map in a lowercase name so that we can unify the search string to get the results
+                namePersonObjMap.put(personName.toLowerCase(), s);
+            }
+        }
+
+        public T searchByName(String name) {
+            if(name == null  || name == "") {
+                return null;
+            }
+            return this.namePersonObjMap.get(name.toLowerCase());
+        }
+
+    }
+
+
+5. Requirement was changed and now we want to enable PersonRepo class to hold both types Student and Staff. Provide a modified
+   implementation to reflect this change.
+
+   // Setters, getters and constructors omitted for brevity
+
+   import java.util.ArrayList;
+   import java.util.HashMap;
+   import java.util.List;
+   import java.util.Map;
+
+   public abstract class Person {
+       protected String name;
+       protected String address;
+       protected String school;
+       //class as a variable name can't be used in Java so changing it to className
+       protected String className;
+   }
+
+   public class Student extends Person {
+       private double fee;
+   }
+
+   public class Staff extends Person {
+       private double sallary;
+   }
+
+   public class PersonRepo {
+       private List<Person> persons = new ArrayList<>();
+       private Map<String, Person> namePersonObjMap = new HashMap<>();
+
+       public void addPerson(Person s) {
+           persons.add(s);
+           String personName = s.getName();
+           //Assuming that if name is empty then we are ignoring those instance but ideally name should not be empty.
+           if(personName != null && personName != "") {
+               //Storing key to map in a lowercase name so that we can unify the search string to get the results
+               namePersonObjMap.put(personName.toLowerCase(), s);
+           }
+       }
+
+       public Person searchByName(String name) {
+           if(name == null  || name == "") {
+               return null;
+           }
+           return this.namePersonObjMap.get(name.toLowerCase());
+       }
+
+   }
+
+6. Add a new searchByName() method that takes a second kind parameter (of type to be determined) returning Student type in case k
+   ind was student and returning Staff type in case kind was staff
+
+   public Person searchByName(String name, String kind) {
+       if(name == null  || name == "") {
+           return null;
+       }
+       Person person = namePersonObjMap.get(name.toLowerCase());
+       if(kind.equalsIgnoreCase("student")){
+           if(person instanceof Student){
+               return person;
+           }
+       }
+       if(kind.equalsIgnoreCase("staff")){
+           if(person instanceof Staff){
+               return person;
+           }
+       }
+       return null;
+   }

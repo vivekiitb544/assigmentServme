@@ -1,0 +1,48 @@
+Consider the following Student / Staff related classes
+// Setters, getters and constructors omitted for brevity
+public class Student {
+ private String name;
+ private String address;
+ private String school;
+ private String class;
+ private double fee;
+}
+public class Staff {
+ private String name;
+ private String address;
+ private String school;
+ private String class;
+ private double sallary;
+}
+public class StudentRepo {
+ private List<Student> students = new ArrayList<>();
+ public void addStudent(Student s){
+ students.add(s);
+ }
+ public Student searchByName(String name) {
+ // TODO
+ }
+}
+public class StaffRepo {
+ private List<Staff> staffs = new ArrayList<>();
+ public void addStaff(Staff s){
+ staffs.add(s);
+ }
+ public Student searchByName(String name) {
+ // TODO
+ }
+}
+
+
+1. Provide implementation for searchByName() methods
+2. Looking at the above defined classes we can notice that there are a lot in common between them, is such a redundancy a bad or good
+   practice? why?
+3. Let us start by enhancing Student and Staff classes. They have common functionalities, we need to extract them to a separate Perso
+   n class. Provide an implementation of such a class performing needed changes to Student and Staff classes.
+4. Now let us move toStudentRepo and StaffRepo classes; they seem very similar, to remove this redundancy we want to replace them
+   with a single PersonRepo class that can hold Student or Staff items (i.e. an instance of PersonRepo can hold either Student or St
+   aff instances) in a type safe way. Provide an implementation for such a PersonRepoclass.
+5. Requirement was changed and now we want to enable PersonRepo class to hold both types Student and Staff. Provide a modified
+   implementation to reflect this change.
+6. Add a new searchByName() method that takes a second kind parameter (of type to be determined) returning Student type in case k
+   ind was student and returning Staff type in case kind was staff

@@ -1,0 +1,73 @@
+Consider the following Item / ItemRepo implementation
+// Setters, getters and constructors omitted for brevity
+class Item {
+ private int id;
+ private String name;
+
+}
+class ItemRepo {
+ private Set<Item> items = new HashSet<>();
+
+ public void putItem(Item item){
+ items.add(item);
+ }
+
+ public void removeItemById(int itemId){
+ // TODO
+ }
+
+ public Item getItemById(int itemId){
+ // TODO
+ }
+}
+
+
+1. Add implementation for removeItemById()and getItemById() methods.
+2. Consider the following code snippet:
+
+    ItemRepo repo = new ItemRepo();
+    repo.putItem(new Item(1001,"Joe"));
+    // Name 'Joe' was wrong name so we want to fix it as 'Jonathan'
+    repo.putItem(new Item(1001,"Jonathan"));
+
+
+    Did statement on line 4 fix the name inserted item at line 2 or we have now a duplicate item? If we have duplicate item then how can we
+    fix this problem? we need to have any two items with same id be treated as same one
+
+3. Looking back at implementation of the different ItemRepo methods; Is Set best collection type to be used in terms of performance? Or
+   we have a better alternative collection type?
+
+4. Suppose that adding item to a repo is an expensive operation (see modified implementation of putItem() below) and we want to move
+   it to a background thread. Modify the implementation putItem() to: 1) execute actualPutItem() on a background thread and 2)
+   notify caller about the completion of the operation through a callback
+
+   public void putItem(Item item, SOME-TYPE callback){
+    // TODO execute actualPutItem on a background thread and when
+   it finishes call 'callback'
+    // TODO to notify the caller that the operation finished
+   }
+   private void actualPutItem(Item item){
+    // Simulate an expensive operation
+    Thread.sleep(2000);
+    items.add(item);
+   }
+
+   Note: We need the implementation to be thread safe
+
+5. Provide an alternative implementation putItemAlt(Item item) to use a java.util.concurrent.CompletionStage as return
+   value instead of using a callback parameter to inform caller about the completion of the operation
+
+6. We want to enable interested parties to listen to put/remove item events through event listeners, a Listener is defined using the
+   following interface
+
+   interface Listener {
+    void itemPut(Item item);
+    void itemRemoved(Item item);
+   }
+
+   Add a method addListener(Listener listener) to ItemRepo that adds a listener (multiple listeners can be added) to the repo.
+   Do proper modifications so that listeners would be informed about all put/remove events
+
+7. We need add the ability to remove a listener when needed; to do so we need to modify addListener() method to return a java.io.C
+   loseable instance; closing this Closeable would remove the listener
+

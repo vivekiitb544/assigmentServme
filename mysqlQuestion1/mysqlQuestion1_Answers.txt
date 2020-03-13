@@ -1,0 +1,100 @@
+Question#1
+
+Given the table structure and row data below, answer the follow up questions
+
+mysql> explain user_skill;
+
++-------------------------------+---------------------+-------+-----+
+| Field | Type | Null | Key |
++-------------------------------+---------------------+-------+-----+
+| user_skill_id | int(11) | | PRI |
+| user_skill_last_modified | timestamp(14) | YES | |
+| user_skill_date_created | datetime | YES | |
+| user_id | int(11) | YES | |
+| skill_name | char(255) | YES | |
+| skill_level | char(255) | YES | |
+| skill_usage | char(255) | YES | |
+| skill_last_used | char(255) | YES | |
+| user_skill_endorsed | tinyint(1) | YES | |
++-------------------------------+---------------------+-------+-----+
+
+mysql> *************
++-----------------+-----------------+-----------------------+
+| user_firstname | user_lastname | skill_name |
++-----------------+-----------------+-----------------------+
+| Kim | Simpson | PHP |
+| Kim | Simpson | Perl |
+| Kim | Simpson | Microsoft Word |
+| Kim | Simpson | Microsoft Access |
+| Kim | Simpson | Accounting/Billing |
+| Kim | Simpson | Java |
+| Kim | Simpson | SQL |
+| Kim | Simpson | CSS |
+| Kim | Simpson | OO Programming |
+| Kim | Simpson | Microsoft Excel |
++-----------------+-----------------+-----------------------+
+10 rows in set (0.00 sec)
+
+
+1. Assuming that the data stored in skill_name in the user_skill table might be repeated for different users, what changes would you
+   make to the database to normalize the skill_name and reduce repeat
+   storage? Show the structure of the new table(s).
+
+   We can create a skill tables having skill_name char(255) and skill_id int(11)
+
+   Structure of new tables:
+   +-------------------------------+---------------------+-------+-----+
+   | Field | Type | Null | Key |
+   +-------------------------------+---------------------+-------+-----+
+   | user_skill_id | int(11) | | PRI |
+   | user_skill_last_modified | timestamp(14) | YES | |
+   | user_skill_date_created | datetime | YES | |
+   | user_id | int(11) | YES | |
+   | skill_id | int(11) | YES | |
+   | skill_level | char(255) | YES | |
+   | skill_usage | char(255) | YES | |
+   | skill_last_used | char(255) | YES | |
+   | user_skill_endorsed | tinyint(1) | YES | |
+   +-------------------------------+---------------------+-------+-----+
+
+2. Recreate the query that returned the 10 rows of data supplied. Speculate on tables that would be needed that are not shown here
+   select
+   u.user_firstname,
+   u.user_lastname,
+   s.skill_name
+   from user_skill us
+   join user u on u.user_id=us.user_id
+   join skill s on s.skill_id=us.skill_id
+   limit 10;
+
+
+3. Given the following query, how could it be optimized? List all assumptions:
+         select c.* FROM companies AS c JOIN users AS u USING(companyid) JOIN jobs AS j USING(userid) JOIN
+         useraccounts AS ua USING(userid) WHERE j.jobid = 123;
+
+
+   Optimised Query:
+
+   select c.* FROM
+   	(select userid from jobs WHERE j.jobid = 123) AS j
+   	JOIN
+   	users AS u USING(userid)
+   	JOIN
+   	companies AS c USING(companyid);
+
+  Assumptions:
+   'Companies' is a small table. It will just contain list of companies.
+   'Users' is a big table
+
+  Suggested Optimisation:
+   1) Remove useraccounts table (no need of that JOIN) - As it JOINS on same userid and we are not using any column from useraccounts table
+
+   2) Put Filter on jobs table first rather than filtering at end after joining. Only records with jobid = 123 will be filtered first
+
+   3) Join 'jobs' table with big table 'users' so that less records will exist after first join
+
+   4) With subset/small data in point 3, Join companies table which is also small in size
+
+
+
+

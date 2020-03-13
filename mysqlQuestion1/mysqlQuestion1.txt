@@ -1,0 +1,33 @@
+Question#1
+
+Given the table structure and row data below, answer the follow up questions
+
+mysql> explain user_skill;
+
++-------------------------------+---------------------+-------+-----+
+| Field | Type | Null | Key |
++-------------------------------+---------------------+-------+-----+
+| user_skill_id | int(11) | | PRI |
+| user_skill_last_modified | timestamp(14) | YES | |
+| user_skill_date_created | datetime | YES | |
+| user_id | int(11) | YES | |
+| skill_name | char(255) | YES | |
+| skill_level | char(255) | YES | |
+| skill_usage | char(255) | YES | |
+| skill_last_used | char(255) | YES | |
+| user_skill_endorsed | tinyint(1) | YES | |
++-------------------------------+---------------------+-------+-----+
+
+
+
+1. Assuming that the data stored in skill_name in the user_skill table might be repeated for different users, what changes would you
+   make to the database to normalize the skill_name and reduce repeat
+   storage? Show the structure of the new table(s).
+
+2. Recreate the query that returned the 10 rows of data supplied. Speculate on tables that would be needed that are not shown here
+
+3. Given the following query, how could it be optimized? List all assumptions:
+         select c.* FROM companies AS c JOIN users AS u USING(companyid) JOIN jobs AS j USING(userid) JOIN
+         useraccounts AS ua USING(userid) WHERE j.jobid = 123;
+
+

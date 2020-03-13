@@ -10,15 +10,15 @@ services:
     ports:
     - "3306:3306"
     restart: always
-#
-#  registration-login:
-#    build: .
-#    volumes:
-#    - .:/app
-#    - ~/.m2:/root/.m2
-#    working_dir: /app
-#    ports:
-#    - 8080:8080
-#    command: mvn clean spring-boot:run
-#    depends_on:
-#    - hk-mysql
+
+  todo-app:
+    build: .
+    volumes:
+    - .:/app
+    - ~/.m2:/root/.m2
+    working_dir: /app
+    ports:
+    - 8080:8080
+    command: mvn clean spring-boot:run
+    depends_on:
+    - hk-mysql

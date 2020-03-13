@@ -1,6 +1,7 @@
 package com.servme.todoapp.auth.service;
 
 
+import com.servme.todoapp.auth.model.CustomSpringUser;
 import com.servme.todoapp.auth.model.Role;
 import com.servme.todoapp.auth.model.User;
 import com.servme.todoapp.auth.repository.UserRepository;
@@ -32,6 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
+        return new CustomSpringUser(user.getUsername(), user.getPassword(), grantedAuthorities, user.getId());
     }
 }
